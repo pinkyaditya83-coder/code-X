@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Surprise</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+text-align:center;
+overflow:hidden;
+background:linear-gradient(135deg,#ff758c,#ff7eb3);
+color:white;
+}
+
+#welcome{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+}
+
+button{
+padding:12px 25px;
+font-size:18px;
+border:none;
+border-radius:30px;
+background:white;
+color:#ff4d6d;
+cursor:pointer;
+}
+
+#main{
+display:none;
+padding-top:60px;
+}
+
+.slideshow img{
+width:300px;
+border-radius:15px;
+margin-top:20px;
+}
+
+.heart{
+position:absolute;
+font-size:20px;
+animation:float 6s linear infinite;
+}
+
+@keyframes float{
+0%{transform:translateY(100vh);}
+100%{transform:translateY(-10vh);}
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="welcome">
+<h1>A small surprise for you 🎁</h1>
+<button onclick="start()">Open</button>
+</div>
+
+<div id="main">
+
+<h1>Happy Birthday Riya 🎂</h1>
+
+<p id="message"></p>
+
+<div class="slideshow">
+<img id="slide" src="photo1.jpg">
+</div>
+
+</div>
+
+<br>
+
+<button onclick="openWishBox()">🧞 Genie Gift</button>
+
+<div id="wishBox" style="display:none">
+
+<h2>Make a Wish ✨</h2>
+
+<input id="wishText" placeholder="Type your wish">
+
+<br><br>
+
+<button onclick="sendWish()">Send Wish 🎁</button>
+
+</div>
+
+<audio id="music" loop>
+<source src="song.mp3">
+</audio>
+
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+<script>
+
+(function(){
+emailjs.init("R2J4WoqG1vVEahNbF");
+})();
+
+function start(){
+
+document.getElementById("welcome").style.display="none";
+document.getElementById("main").style.display="block";
+
+document.getElementById("music").play();
+
+typeWriter();
+createHearts();
+
+}
+
+const text="Wishing you a great day and lots of happiness!";
+let i=0;
+
+function typeWriter(){
+
+if(i<text.length){
+
+document.getElementById("message").innerHTML+=text.charAt(i);
+
+i++;
+
+setTimeout(typeWriter,60);
+
+}
+
+}
+
+let images=[
+"photo1.jpg",
+"photo2.jpg",
+"photo3.jpg"
+];
+
+let index=0;
+
+setInterval(()=>{
+
+index=(index+1)%images.length;
+
+document.getElementById("slide").src=images[index];
+
+},3000);
+
+
+function createHearts(){
+
+setInterval(()=>{
+
+let heart=document.createElement("div");
+
+heart.className="heart";
+
+heart.innerHTML="💖";
+
+heart.style.left=Math.random()*100+"vw";
+
+document.body.appendChild(heart);
+
+setTimeout(()=>{
+heart.remove();
+},6000);
+
+},400);
+
+}
+
+
+function openWishBox(){
+
+document.getElementById("wishBox").style.display="block";
+
+}
+
+
+function sendWish(){
+
+let wish=document.getElementById("wishText").value;
+
+emailjs.send("service_07qqc6k","template_ijxvpcp",{
+message:wish
+})
+.then(function(){
+
+alert("Wish sent successfully ✨");
+
+}, function(error){
+
+alert("Failed to send wish");
+
+});
+
+}
+
+</script>
+
+</body>
+</html>
