@@ -58,7 +58,7 @@
         }
         .card {
             background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);
-            padding: 20px; border-radius: 25px; border: 2px solid white;
+            padding-bottom: 60px; border-radius: 25px; border: 2px solid white;
             width: 100%; max-width: 400px; text-align: center; position: relative;
         }
         .frame {
@@ -73,10 +73,8 @@
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
         /* Special Message Button */
 .special-btn {
-  position: absolute;   /* button ko parent ke andar fix karo */
-  bottom: 20px;         /* bottom se distance */
-  left: 50%;            /* horizontally center */
-  transform: translateX(-50%); /* exact centre alignment */
+  display: block;
+  margin: 20px auto 0 auto; /* center horizontally */
   background-color: hotpink;
   color: white;
   padding: 10px 20px;
