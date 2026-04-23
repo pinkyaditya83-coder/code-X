@@ -3,291 +3,269 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Magical Birthday | Priyanshi</title>
+    <title>Birthday Surprise | Priyanshi</title>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --magic-gold: #ffd700;
-        }
-
         body {
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-            background: #0f0c29;
-            color: white;
-            overflow-x: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            margin: 0; font-family: 'Poppins', sans-serif;
+            background: #0f0c29; color: white; overflow-x: hidden;
         }
 
         /* --- PAGE 1: MAGIC LAMP --- */
         #page1 {
-            text-align: center;
-            transition: opacity 0.8s ease;
-            width: 100%;
+            height: 100vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
         }
-
-        .lamp-wrapper {
-            position: relative;
-            display: inline-block;
-            cursor: pointer;
-            animation: float 4s ease-in-out infinite;
-        }
-
         #lamp-img {
-            font-size: 120px;
-            filter: drop-shadow(0 0 10px var(--magic-gold));
-            transition: transform 0.2s;
-            user-select: none;
+            font-size: 100px; cursor: pointer; filter: drop-shadow(0 0 15px gold);
+            transition: transform 0.2s; animation: float 3s infinite;
         }
-
         #smoke-effect {
-            position: absolute;
-            top: 20%; left: 50%;
-            width: 50px; height: 50px;
-            background: radial-gradient(circle, #fff, #a29bfe, transparent);
-            border-radius: 50%;
-            opacity: 0;
-            pointer-events: none;
-            z-index: 10;
+            position: absolute; width: 10px; height: 10px; background: white;
+            border-radius: 50%; opacity: 0; pointer-events: none;
         }
-
         @keyframes smokeExpand {
-            0% { transform: scale(0); opacity: 0; filter: blur(5px); }
-            50% { opacity: 1; filter: blur(20px); }
-            100% { transform: scale(30); opacity: 0; filter: blur(40px); }
+            0% { transform: scale(0); opacity: 0; }
+            50% { opacity: 0.8; filter: blur(20px); }
+            100% { transform: scale(50); opacity: 0; }
         }
 
-        #genie-ui {
-            display: none;
-            animation: fadeIn 1s forwards;
+        /* --- CURTAIN SYSTEM --- */
+        #curtain-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            display: none; z-index: 9999;
         }
-
-        .wish-input {
-            padding: 12px 20px;
-            border-radius: 25px;
-            border: none;
-            width: 250px;
-            margin: 15px 0;
-            font-size: 16px;
+        .curtain {
+            width: 50%; height: 100%; background: #8b0000; position: absolute; top: 0;
+            transition: transform 3s ease-in-out; border: 1px solid rgba(0,0,0,0.3);
+            background-image: repeating-linear-gradient(90deg, transparent, transparent 30px, rgba(0,0,0,0.1) 30px, rgba(0,0,0,0.1) 60px);
         }
-
-        .magic-btn {
-            background: linear-gradient(45deg, #ffd700, #ff9f00);
-            border: none;
-            padding: 12px 30px;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
+        #left-curtain { left: 0; } #right-curtain { right: 0; }
+        #curtain-genie {
+            position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%);
+            width: 300px; z-index: 10000; transition: opacity 1s;
         }
+        .curtain-open #left-curtain { transform: translateX(-100%); }
+        .curtain-open #right-curtain { transform: translateX(100%); }
+        .curtain-open #curtain-genie { opacity: 0; transition-delay: 2s; }
 
-        /* --- PAGE 2: BIRTHDAY CELEBRATION --- */
+        /* --- PAGE 2: CELEBRATION --- */
         #page2 {
-            display: none;
-            width: 100%;
-            min-height: 100vh;
+            display: none; flex-direction: column; align-items: center;
             background: linear-gradient(135deg, #ff758c, #ff7eb3);
-            flex-direction: column;
-            align-items: center;
-            padding: 40px 10px;
-            box-sizing: border-box;
-            overflow-y: auto;
+            min-height: 100vh; padding: 40px 20px; box-sizing: border-box;
         }
-
-        .main-card {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(15px);
-            padding: 25px;
-            border-radius: 30px;
-            border: 1px solid rgba(255,255,255,0.3);
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        .card {
+            background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);
+            padding: 20px; border-radius: 25px; border: 2px solid white;
+            width: 100%; max-width: 400px; text-align: center; position: relative;
         }
-
-        .slideshow-frame {
-            width: 100%;
-            height: 350px;
-            border-radius: 20px;
-            overflow: hidden;
-            border: 4px solid white;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0,0,0,0.1);
+        .frame {
+            width: 100%; height: 350px; border-radius: 15px; overflow: hidden;
+            border: 4px solid white; margin-bottom: 15px;
+            display: flex; align-items: center; background: #000;
         }
+        #slide-img { width: 100%; height: 100%; object-fit: contain; transition: 0.5s; }
+        .wish-input { padding: 10px; border-radius: 20px; border: none; width: 80%; margin: 10px; }
+        .btn { padding: 10px 25px; border-radius: 25px; border: none; background: gold; font-weight: bold; cursor: pointer; }
 
-        #slide-img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            transition: opacity 0.6s ease;
-        }
-
-        #typewriter-note {
-            font-size: 18px;
-            line-height: 1.6;
-            min-height: 120px;
-            color: white;
-            font-weight: 500;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-        }
-
-        /* --- GLOBAL ANIMATIONS --- */
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Special Message Button */
+.special-btn {
+  position: absolute;   /* button ko parent ke andar fix karo */
+  bottom: 20px;         /* bottom se distance */
+  left: 50%;            /* horizontally center */
+  transform: translateX(-50%); /* exact centre alignment */
+  background-color: hotpink;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
 
-        .sparkle {
-            position: fixed;
-            pointer-events: none;
-            z-index: 999;
-        }
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Modal (Popup Box) */
+.modal {
+    display: none; 
+    position: fixed;
+    z-index: 20000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background: white;
+    color: #333;
+    margin: 20% auto;
+    padding: 30px;
+    border-radius: 20px;
+    width: 80%;
+    max-width: 350px;
+    position: relative;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.close-btn {
+    position: absolute;
+    right: 15px; top: 10px;
+    font-size: 28px;
+    cursor: pointer;
+    color: #aaa;
+}
     </style>
 </head>
 <body>
 
     <div id="page1">
-        <h2 id="hint-text">Rub the lamp to summon the Genie... ✨</h2>
-        <div class="lamp-wrapper" onclick="handleRub()">
-            <div id="smoke-effect"></div>
-            <div id="lamp-img">🪔</div>
+        <h2 id="hint">Rub the lamp 3 times... ✨</h2>
+        <div id="smoke-effect"></div>
+        <div id="lamp-img" onclick="rub()">🪔</div>
+        <div id="genie-ui" style="display:none;">
+            <h1>🧞‍♂️</h1>
+            <h3>Hukum Mere Aaka! Type your wish priyanshi:</h3>
+            <input type="text" id="wish" class="wish-input" placeholder="Your secret wish..."><br>
+            <button class="btn" onclick="send()">Grant Wish ✨</button>
         </div>
+    </div>
 
-        <div id="genie-ui">
-            <h1 style="font-size: 60px; margin: 10px 0;">🧞‍♂️</h1>
-            <h3>"I am the Birthday Genie! Ask for a wish, Priyanshi."</h3>
-            <input type="text" id="wishText" class="wish-input" placeholder="Your secret wish..."><br>
-            <button class="magic-btn" onclick="grantWish()">Grant Wish ✨</button>
-        </div>
+    <div id="curtain-container">
+        <div id="left-curtain" class="curtain"></div>
+        <div id="right-curtain" class="curtain"></div>
+        <img id="curtain-genie" src="genie_opening.-100ꥌꁰȀ耀">
     </div>
 
     <div id="page2">
-        <div class="main-card">
-            <h2 style="margin-top:0;">Happy Birthday, Priyanshi! 🎂</h2>
-            <div class="slideshow-frame">
-                <img id="slide-img" src="photo1.jpg">
-            </div>
-            <div id="typewriter-note"></div>
+        <div class="card">
+            <h1 style="margin-top:0;">Happy Birthday, Priyanshi! 🎂</h1>
+            <div class="frame"><img id="slide-img" src="photo1.jpg"></div>
+
+            <div id="note" style="font-size:16px; font-weight:bold; min-height:80px;"></div>
         </div>
     </div>
+ <button class="special-btn" onclick="openSecretNote()">Open Special Message 💌</button>
 
-    <audio id="bgMusic" loop>
-        <source src="song.mp3" type="audio/mpeg">
-    </audio>
+<div id="secret-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeSecretNote()">&times;</span>
+        <h2>Meri Taraf Se Ek Aur Baat... ❤️</h2>
+        <p id="secret-text">
+            Priyanshi, ye website toh bas ek chota sa zariya hai. Asal mein main bas ye batana chahta hoon ki aap kitni important ho.ye kabhi mat sochna ki bakiyo se kam ho, mere point of view se dekhu to aap ekdum perfect ho 
+           aise hi har chiz try karte rahiye keep grinding! Is saal aap jo bhi chaho, wo sab aapko mile. Hamesha aise hi khush rehna! ✨
+        </p>
+    </div>
+</div>
+
+    <audio id="music" loop><source src="song.mp3"></audio>
 
     <script>
-        // 1. EmailJS Setup
-        (function() { 
-            emailjs.init("R2J4WoqG1vVEahNbF"); // <-- CHANGE THIS
-        })();
+        (function(){ emailjs.init("R2J4WoqG1vVEahNbF"); })();
 
-        let rubCount = 0;
-        let charIndex = 0;
-        let typingTimer;
-        const noteText = "hi Priyanshi, aap sach me special hai! Is saal apke saare sapne pure ho aur apki smile hamesha aise hi bani rahe. Ye chota sa surprise apke liye! Have a blast! ❤️";
-        const images = ["photo1.jpg", "photo2.jpg", "photo3.jpg"]; // <-- CHECK FILENAMES
+        let count = 0;
+        const images = ["photo1.jpg", "photo2.jpg", "photo3.jpg"];
+        const noteText = "hi Priyanshi, aap sach me special hai! Is saal apke saare sapne pure ho aur apki smile hamesha aise hi bani rahe. Have a blast! ❤️";
 
-        // 2. Lamp Rub Logic
-        function handleRub() {
-            rubCount++;
-            const lamp = document.getElementById('lamp-img');
-            const smoke = document.getElementById('smoke-effect');
-            
-            lamp.style.transform = `rotate(${rubCount % 2 === 0 ? 10 : -10}deg) scale(1.1)`;
-            setTimeout(() => { lamp.style.transform = "rotate(0) scale(1)"; }, 150);
-
-            if (rubCount === 3) {
-                smoke.style.animation = "smokeExpand 1.5s forwards";
+        function rub() {
+            count++;
+            document.getElementById('lamp-img').style.transform = `rotate(${count*10}deg)`;
+            if(count >= 3) {
+                document.getElementById('smoke-effect').style.animation = "smokeExpand 1s forwards";
                 setTimeout(() => {
                     document.getElementById('lamp-img').style.display = "none";
-                    document.getElementById('hint-text').style.display = "none";
+                    document.getElementById('hint').style.display = "none";
                     document.getElementById('genie-ui').style.display = "block";
-                }, 800);
+                }, 600);
             }
         }
 
-        // 3. Email & Transition
-        function grantWish() {
-            const wish = document.getElementById('wishText').value;
-            if(!wish) { alert("Genie needs a wish!"); return; }
-
-            const btn = document.querySelector('.magic-btn');
-            btn.disabled = true;
-            btn.innerHTML = "Processing...";
-
-            emailjs.send("service_07qqc6k", "template_ijxvpcp", { // <-- CHANGE THESE
-                message: wish,
-                to_name: "Priyanshi"
-            }).then(() => {
-                transitionToBirthday();
-            }).catch(() => {
-                transitionToBirthday(); // Aage badho fallback ke liye
-            });
+        function send() {
+            const val = document.getElementById('wish').value;
+            if(!val) return alert("Wish toh likho!");
+            
+            document.querySelector('.btn').disabled = true;
+            emailjs.send("service_07qqc6k", "template_ijxvpcp", { message: val, to_name: "Priyanshi" })
+                .then(() => reveal());
         }
 
-        function transitionToBirthday() {
-            document.getElementById('page1').style.opacity = "0";
+        function reveal() {
+            document.getElementById('page1').style.display = "none";
+            const cc = document.getElementById('curtain-container');
+            cc.style.display = "block";
+            
             setTimeout(() => {
-                document.getElementById('page1').style.display = "none";
+                cc.classList.add('curtain-open');
+                document.getElementById('music').play();
+            }, 500);
+
+            setTimeout(() => {
+                cc.style.display = "none";
                 document.getElementById('page2').style.display = "flex";
-                const music = document.getElementById('bgMusic');
-                music.play().catch(() => console.log("Music click required"));
-                startEverything();
-            }, 800);
+                startCelebration();
+            }, 4000);
         }
 
-        // 4. Final Page Animations
-        function startEverything() {
+        function startCelebration() {
             // Slideshow
-            let idx = 0;
+            let i = 0;
             setInterval(() => {
-                idx = (idx + 1) % images.length;
-                const img = document.getElementById('slide-img');
-                img.style.opacity = "0";
+                i = (i + 1) % images.length;
+                document.getElementById('slide-img').style.opacity = 0;
                 setTimeout(() => {
-                    img.src = images[idx];
-                    img.style.opacity = "1";
-                }, 400);
+                    document.getElementById('slide-img').src = images[i];
+                    document.getElementById('slide-img').style.opacity = 1;
+                }, 500);
             }, 3000);
 
             // Typewriter
-            typeWriter();
+            let char = 0;
+            function type() {
+                if(char < noteText.length) {
+                    document.getElementById('note').innerHTML += noteText.charAt(char);
+                    char++; setTimeout(type, 50);
+                }
+            }
+            type();
+
+            // Video Auto-play
+            document.getElementById('vid').play();
 
             // Sparkles
             setInterval(createSparkle, 300);
         }
 
-        function typeWriter() {
-            const container = document.getElementById("typewriter-note");
-            clearTimeout(typingTimer);
-            if (charIndex < noteText.length) {
-                container.innerHTML += noteText.charAt(charIndex);
-                charIndex++;
-                typingTimer = setTimeout(typeWriter, 50);
-            }
-        }
-
         function createSparkle() {
-            const sparkle = document.createElement("div");
-            sparkle.className = "sparkle";
-            sparkle.innerHTML = "✨";
-            sparkle.style.left = Math.random() * 100 + "vw";
-            sparkle.style.top = "100vh";
-            sparkle.style.fontSize = (Math.random() * 20 + 10) + "px";
-            sparkle.style.transition = "all 4s linear";
-            document.body.appendChild(sparkle);
-
-            setTimeout(() => {
-                sparkle.style.transform = `translateY(-110vh) rotate(${Math.random() * 360}deg)`;
-                sparkle.style.opacity = "0";
-            }, 100);
-            setTimeout(() => sparkle.remove(), 4000);
+            const s = document.createElement("div");
+            s.innerHTML = "✨"; s.className = "sparkle";
+            s.style.cssText = `position:fixed; left:${Math.random()*100}vw; top:100vh; transition:4s; font-size:20px;`;
+            document.body.appendChild(s);
+            setTimeout(() => { s.style.transform = "translateY(-110vh)"; s.style.opacity = "0"; }, 100);
+            setTimeout(() => s.remove(), 4000);
         }
+function openSecretNote() {
+    document.getElementById('secret-modal').style.display = "block";
+    // Jab ye khule toh thoda aur confetti ya sparkle effects bhi dal sakte ho
+}
+
+function closeSecretNote() {
+    document.getElementById('secret-modal').style.display = "none";
+}
+
+// Agar box ke bahar click kare toh bhi band ho jaye
+window.onclick = function(event) {
+    let modal = document.getElementById('secret-modal');
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
     </script>
 </body>
 </html>
